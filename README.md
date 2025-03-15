@@ -337,10 +337,3 @@ Licensing Inquiries: Allow 5-7 business days for review of permission requests.
 
 *This document supersedes all prior versions of the Hextrix Ai license agreement.*
 
----
-
-**Changes from v3.1 → v4.0:**
-- Converted to a fully proprietary license model
-- Clarified and strengthened core restrictions
-- Updated contact information
-- Simplified license structure
