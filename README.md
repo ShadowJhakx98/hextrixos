@@ -246,136 +246,101 @@ pacman -S mingw-w64-x86_64-python-<package-name>
 
 
 
-# 
-
----
-
 # LICENSE.md
 
-**Effective Date:** February 27, 2025
-**Version:** 3.1
+**Effective Date:** March 15, 2025
+**Version:** 4.0
 
 ---
+
+# Proprietary License
+Copyright (c) 2025 Jared Edwards - The Hextrix AI Project
 
 ## 1. Definitions
 
 - **Software**: The Hextrix Ai system, including all neural architectures (e.g., GPT-4o integration, Jetson AGX Thor edge modules), ethical governance frameworks, and associated documentation.
+- **Owner**: Jared Edwards, creator and sole proprietor of the Hextrix AI Project.
 - **User**: Any individual or entity interacting with the Software.
-- **Commercial Use**: Deployment for revenue-generating activities, including enterprise robotics, healthcare diagnostics, or IoT monetization.
-- **Edge Deployment**: Operation on NVIDIA Jetson AGX Thor or equivalent embedded systems.
+- **Commercial Use**: Any deployment for revenue-generating activities, including enterprise robotics, healthcare diagnostics, or IoT monetization.
 
 ---
 
-## 2. License Grant
+## 2. License Terms and Conditions
 
-### 2.1 Permitted Use
+This software and associated documentation files (the "Software") are the proprietary and confidential property of Jared Edwards ("Owner"). All rights to the Software are reserved by the Owner.
 
-- **Research/Non-Commercial**: Free use for academic research or personal projects, contingent on SFW mode activation for minors[^1][^3].
-- **Enterprise Licensing**: Requires signed agreement for:
-    - **Cloud Clusters**: NVIDIA H100/A100 GPU deployments exceeding 8 nodes
-    - **Quantum Co-Processing**: Integration with Google Willow QPU modules
-    - **Domain Modules**: Healthcare (HIPAA-compliant configurations), military, or financial services[^2][^6]
-- **Edge Devices**: Limited to 3 Jetson AGX Thor units without commercial license[^2][^4]
+### 2.1 Restrictions
 
+1. **No Modification**: You may not modify, adapt, or create derivative works based on the Software without explicit written permission from the Owner.
+2. **No Redistribution**: You may not distribute, sublicense, lease, rent, loan, sell, or otherwise transfer the Software to any third party without explicit written permission from the Owner.
+3. **No Reverse Engineering**: You may not reverse engineer, decompile, disassemble, or attempt to derive the source code of the Software.
+4. **No Commercial Use**: You may not use the Software for any commercial purposes without explicit written permission from the Owner.
 
-### 2.2 Restrictions
+### 2.2 Limited Permission
 
-- **Redistribution**: Prohibited without written consent, including model weights (quantized or full-precision), Triton Inference Server configurations, or ethical alignment circuits[^1][^5].
-- **Reverse Engineering**: Strictly banned for components using:
-    - NVIDIA Transformer Engine kernels
-    - Quantum-classical hybrid algorithms
-    - Constitutional AI guardrails (57 programmable constraints)[^2][^4]
-- **Ethical Bypass**: Tampering with real-time harm monitoring (14D vector scoring) or Z3 theorem prover checks voids all warranties[^2][^4].
-
+The Owner grants you a limited, non-exclusive, non-transferable, revocable license to use the Software for personal, non-commercial purposes only, subject to the restrictions above.
 
 ---
 
 ## 3. Intellectual Property
 
-- **Core Ownership**: All rights to neuro-symbolic orchestration logic, hybrid precision pipelines, and cascade failure mitigation systems remain with Jared Edwards[^1][^5].
-- **Third-Party Components**: Subsystems using Anthropic HH-RLHF datasets or NVIDIA cuQuantum require separate compliance audits[^2][^6].
+- **Core Ownership**: All rights to the Software, including neuro-symbolic orchestration logic, hybrid precision pipelines, and cascade failure mitigation systems remain with Jared Edwards.
+- **Third-Party Components**: This project may incorporate several third-party open source components, each with their own license. The use of these components in the Software does not grant you any rights to the Software beyond those specified in this license.
 
 ---
 
-## 4. Compliance \& Ethics
+## 4. Compliance & Ethics
 
-### 4.1 Regulatory Obligations
+### 4.1 Data Privacy Notice
 
-Users must maintain:
-
-- **GDPR/CCPA**: Automated DSAR handling via Merkle-tree audit trails (§4.2, Hextrix Ai Architecture Whitepaper)
-- **AI Act Conformity**: 89 risk classifiers updated hourly for high-risk deployments[^2][^4]
-- **COPPA**: Age verification heuristics (99.2% accuracy) for educational applications[^3][^4]
-
+This software may collect and process personal data. Users are responsible for ensuring compliance with applicable data protection laws, including obtaining appropriate consent from end users before processing their personal data.
 
 ### 4.2 Ethical Use
 
 - **Content Generation**: NSFW capabilities disabled by default; enablement requires:
-    - 18+ age verification via government ID hashing
-    - Geo-fencing excluding jurisdictions with strict morality laws[^1][^3]
-- **Robotics**: Humanoid systems using Hextrix Ai must implement dual kill switches (software + physical emergency stop)[^4][^6]
+  - 18+ age verification via government ID hashing
+  - Geo-fencing excluding jurisdictions with strict morality laws
+- **Robotics**: Humanoid systems using Hextrix Ai must implement dual kill switches (software + physical emergency stop)
 
 ---
 
-## 5. Liability
+## 5. Disclaimer
 
-### 5.1 Disclaimers
-
-The Licensor assumes no responsibility for:
-
-- **Edge Computing Failures**: Latency exceeding 500ms SLAs on Jetson Thor deployments[^2][^6]
-- **Quantum Errors**: >1.2% decoherence rates in Willow QPU-integrated inferences
-- **Ethical Violations**: User-modified constitutional AI parameters (§4.7.2, Compliance Handbook)
-
-
-### 5.2 User Accountability
-
-Full responsibility applies for:
-
-- **Regulatory Penalties**: \$25k+/violation under EU AI Act Article 52a
-- **Security Breaches**: Unencrypted model checkpoints leading to IP theft
-- **High-Risk Scenarios**: Unmonitored use in autonomous vehicles or surgical robots[^2][^4]
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE OWNER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
 ## 6. Termination
 
-Violation of §2.2 or §4.1 triggers:
+This license is effective until terminated. Your rights under this license will terminate automatically without notice if you fail to comply with any of its terms.
 
-- **Immediate Revocation**: All edge/cloud licenses
-- **Data Erasure**: Homomorphic encryption tombstoning of user-specific model adapters[^2][^4]
-- **Penalties**: \$150k minimum for attempted redistribution of quantized submodels[^1][^5]
-
----
-
-## 7. Modifications
-
-License updates require 90 days' notice except for:
-
-- **Security Patches**: Critical vulnerabilities (CVSS ≥9.0)
-- **Regulatory Changes**: GDPR Article 35 amendments or new AI liability directives
+Violation of any restrictions triggers:
+- **Immediate Revocation**: All permissions to use the Software
+- **Data Erasure**: User-specific model adapters and configurations
+- **Penalties**: Legal action may be pursued for violations
 
 ---
 
-## 8. Governing Law
+## 7. Governing Law
 
-Disputes resolved under Delaware General Corporation Law with binding arbitration via AAA Commercial Rules.
+This license shall be governed by and construed in accordance with the laws of the jurisdiction in which the Owner resides, without regard to its conflict of law provisions.
 
 ---
 
-**Contact:**
+## 8. Contact for Permissions
+
+For permissions to modify, distribute, or use the Software in ways not covered by this license, please contact:
+
 Jared Edwards
-Hextrix Aiai@gmail.com
-Licensing Inquiries: Allow 5-7 business days for review of commercial use applications.
+Email: thehextrixai@hextrix.net
+Licensing Inquiries: Allow 5-7 business days for review of permission requests.
 
 *This document supersedes all prior versions of the Hextrix Ai license agreement.*
 
 ---
 
-**Changes from v2.3 → v3.1:**
-
-- Added quantum computing liability clauses (§5.1.2)
-- Formalized edge device limits (§2.1.3)
-- Integrated COPPA verification requirements (§4.1.3)
-- Updated penalty structure for model redistribution (§6.3)
-
+**Changes from v3.1 → v4.0:**
+- Converted to a fully proprietary license model
+- Clarified and strengthened core restrictions
+- Updated contact information
+- Simplified license structure
