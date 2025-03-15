@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=HexDroid
+GenericName=Android Application Manager
+Comment=Run and manage Android applications on Hextrix OS
+Exec=python3 /home/jared/hextrix-ai-os-env/hud/hextrix-hexdroid.py
+Icon=/home/jared/hextrix-ai-os-env/hexdroid/hexdroid.png
+Terminal=false
+Categories=System;Utility;
+Keywords=android;anbox;waydroid;apk;app;application;
+StartupNotify=true 
