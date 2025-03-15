@@ -1,0 +1,227 @@
+{
+  "beginner_session": {
+    "name": "Beginner Session",
+    "description": "A gentle, guided session for beginners",
+    "duration_minutes": 10,
+    "intensity": "low",
+    "instruction_sets": [
+      {
+        "phase": "warm_up",
+        "duration_seconds": 120,
+        "instructions": [
+          "Start by getting comfortable and relaxed",
+          "Begin with gentle touches to build arousal",
+          "Focus on your breathing as you start to touch yourself",
+          "Establish a slow, steady rhythm"
+        ]
+      },
+      {
+        "phase": "build_up",
+        "duration_seconds": 240,
+        "instructions": [
+          "Gradually increase your pace",
+          "Pay attention to what feels best",
+          "Slow down if you get too close",
+          "Focus on the sensations you're experiencing"
+        ]
+      },
+      {
+        "phase": "plateau",
+        "duration_seconds": 120,
+        "instructions": [
+          "Maintain a steady pace",
+          "Focus on your breathing",
+          "Enjoy the moment without rushing",
+          "Savor the sensations"
+        ]
+      },
+      {
+        "phase": "peak",
+        "duration_seconds": 90,
+        "instructions": [
+          "Start to increase your pace",
+          "Let yourself get closer to the edge",
+          "Focus on the building pleasure",
+          "You're getting closer to climax"
+        ]
+      },
+      {
+        "phase": "climax",
+        "duration_seconds": 30,
+        "instructions": [
+          "Find your perfect rhythm now",
+          "Let yourself go completely",
+          "Give in to the sensations",
+          "Let yourself finish when you're ready"
+        ]
+      }
+    ],
+    "encouragements": [
+      "You're doing great",
+      "That's perfect",
+      "Just like that",
+      "You're doing so well",
+      "Keep going just like that"
+    ]
+  },
+  "edging_session": {
+    "name": "Edging Session",
+    "description": "A session focused on building arousal through edging",
+    "duration_minutes": 15,
+    "intensity": "medium",
+    "instruction_sets": [
+      {
+        "phase": "warm_up",
+        "duration_seconds": 120,
+        "instructions": [
+          "Start slowly and build arousal gradually",
+          "Focus on gentle touches and building sensation",
+          "Take your time getting fully aroused",
+          "Establish a comfortable rhythm"
+        ]
+      },
+      {
+        "phase": "edge_1",
+        "duration_seconds": 180,
+        "instructions": [
+          "Begin to increase your pace",
+          "Get yourself close to the edge",
+          "When you're nearly there, STOP completely",
+          "Hold still and feel the sensations recede"
+        ]
+      },
+      {
+        "phase": "recovery_1",
+        "duration_seconds": 60,
+        "instructions": [
+          "Gentle touches only",
+          "Let your arousal subside slightly",
+          "Focus on your breathing",
+          "Prepare for the next build-up"
+        ]
+      },
+      {
+        "phase": "edge_2",
+        "duration_seconds": 180,
+        "instructions": [
+          "Start building up again, a bit faster this time",
+          "Push yourself to the edge again",
+          "Get as close as you can without going over",
+          "STOP again when you're right on the edge"
+        ]
+      },
+      {
+        "phase": "recovery_2",
+        "duration_seconds": 60,
+        "instructions": [
+          "Hands off completely this time",
+          "Take deep breaths",
+          "Feel the intense arousal without touching",
+          "Notice how sensitive you've become"
+        ]
+      },
+      {
+        "phase": "final_edge",
+        "duration_seconds": 180,
+        "instructions": [
+          "Begin again, building to the final edge",
+          "Push yourself to the limit one more time",
+          "This time, hold right at the edge as long as you can",
+          "Stay right on the brink of climax"
+        ]
+      },
+      {
+        "phase": "climax",
+        "duration_seconds": 120,
+        "instructions": [
+          "Now give yourself permission to finish",
+          "Find your perfect rhythm",
+          "Let yourself go completely",
+          "Enjoy your well-earned release"
+        ]
+      }
+    ],
+    "encouragements": [
+      "Perfect control",
+      "You're doing amazingly",
+      "That's exactly right",
+      "Feel how intense it's getting",
+      "You're mastering the edge"
+    ]
+  },
+  "intense_session": {
+    "name": "Intense Session",
+    "description": "An intense, faster-paced session",
+    "duration_minutes": 8,
+    "intensity": "high",
+    "instruction_sets": [
+      {
+        "phase": "warm_up",
+        "duration_seconds": 60,
+        "instructions": [
+          "Start immediately with a medium pace",
+          "Build arousal quickly",
+          "Get yourself excited right from the start",
+          "Establish a brisk rhythm"
+        ]
+      },
+      {
+        "phase": "build_up",
+        "duration_seconds": 120,
+        "instructions": [
+          "Increase your pace substantially",
+          "Push your arousal higher and higher",
+          "Feel the intensity building rapidly",
+          "Keep pushing your limits"
+        ]
+      },
+      {
+        "phase": "peak_1",
+        "duration_seconds": 60,
+        "instructions": [
+          "Maximum pace now",
+          "Push yourself to the edge",
+          "But don't finish yet",
+          "Hold back at the last moment"
+        ]
+      },
+      {
+        "phase": "brief_rest",
+        "duration_seconds": 30,
+        "instructions": [
+          "Brief pause",
+          "Just a moment to catch your breath",
+          "But keep yourself ready",
+          "The pause makes what follows more intense"
+        ]
+      },
+      {
+        "phase": "final_push",
+        "duration_seconds": 90,
+        "instructions": [
+          "Now go for it at full intensity",
+          "Give it everything you've got",
+          "Push yourself past your usual limits",
+          "Build to an explosive finish"
+        ]
+      },
+      {
+        "phase": "climax",
+        "duration_seconds": 120,
+        "instructions": [
+          "Now let yourself finish",
+          "Release all control",
+          "Experience maximum pleasure",
+          "Enjoy the intense sensation"
+        ]
+      }
+    ],
+    "encouragements": [
+      "Don't hold back",
+      "Push harder",
+      "That's incredibly intense",
+      "Feel the power building",
+      "You can take even more"
+    ]
+  }
+}
