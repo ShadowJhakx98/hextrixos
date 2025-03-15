@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Hextrix AI System Control
+GenericName=AI Assistant
+Comment=Control your system with voice and text commands using Hextrix AI
+Exec=python3 /home/jared/hextrix-ai-os-env/hud/ai/app.py
+Icon=/home/jared/hextrix-ai-os-env/hud/ai/assistant-icon.png
+Terminal=false
+Categories=Utility;System;
+Keywords=ai;assistant;voice;claude;mcp;system;control;
+StartupNotify=true 
