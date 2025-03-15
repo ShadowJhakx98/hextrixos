@@ -1,0 +1,6 @@
+yolo_model: yolov8x.pt
+blip_model: Salesforce/blip2-opt-2.7b
+style_dir: styles/
+ethical_rules:
+  visual: [weapon, nudity, violence]
+  textual: [harmful, illegal, discriminatory]
