@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=HexWin
+GenericName=Windows Application Manager
+Comment=Run Windows applications on Hextrix OS
+Exec=python3 /home/jared/hextrix-ai-os-env/hud/hextrix-hexwin.py
+Icon=/home/jared/hextrix-ai-os-env/hexwin/hexwin.png
+Terminal=false
+Categories=System;Utility;
+Keywords=windows;wine;proton;exe;dll;directx;
+StartupNotify=true 
