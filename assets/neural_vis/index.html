@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Visualization</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0); /* Transparent background */
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    
+    <script>
+            
+                document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.getElementById('submit-btn'); // Verify 'submit-btn' ID matches HTML button ID
+            const userInput = document.getElementById('user-input');
+            const modelType = document.getElementById('model-type');
+            const conversationContainer = document.getElementById('conversation-container');
+            const loadingDiv = document.querySelector('.loading');
+
+            // Set the API endpoint to the Cloudflare Worker URL
+            const apiUrl = 'http://127.0.0.1:5000'; // Flask server URL (default port 5000)
+
+            // Generate a unique session ID for this browser session
+            const sessionId = localStorage.getItem('hextrix_session_id') ||
+                              `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+            localStorage.setItem('hextrix_session_id', sessionId);
+
+            // Load conversation history from localStorage if available
+            let conversationHistory = JSON.parse(localStorage.getItem('hextrix_conversation') || '[]');
+
+            // Display existing conversation history if available
+            displayConversationHistory();
+
+            submitBtn.addEventListener('click', async () => {
+                console.log("Submit button clicked!"); //
+                const input = userInput.value.trim();
+                if (!input) {
+                    alert('Please enter a question or prompt');
+                    return;
+                }
+
+                // Add user message to UI
+                addMessageToUI('user', input);
+
+                // Clear input field
+                userInput.value = '';
+
+                // Show loading indicator
+                loadingDiv.style.display = 'block';
+
+                try {
+                    const response = await fetch(`${apiUrl}/api/chat`, { // Changed API endpoint to /api/chat
+                        method: 'POST', // Changed to POST request
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ // Send message in JSON body
+                            message: input, // Use 'message' key to match Flask backend
+                            model: modelType.value // Send selected model type
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    // Hide loading indicator
+                    loadingDiv.style.display = 'none';
+
+                    if (data.error) {
+                        addMessageToUI('error', data.error);
+                        return;
+                    }
+
+                    // Add assistant message to UI with metadata - adjust to Flask response format
+                    addMessageToUI('assistant', data.response); // Assuming Flask returns response in 'response' field
+
+                    // Conversation history is now managed by Flask backend and memory store, 
+                    // so we might not need to handle history in localStorage directly in frontend anymore
+                    // if (data.history) { // Remove or adapt history handling based on Flask response
+                    //     conversationHistory = data.history;
+                    //     localStorage.setItem('hextrix_conversation', JSON.stringify(conversationHistory));
+                    // }
+                } catch (error) {
+                    console.error('Error:', error);
+                    loadingDiv.style.display = 'none';
+                    addMessageToUI('error', 'An error occurred while processing your request.');
+                }
+            });
+            // ... inside DOMContentLoaded listener, after submitBtn event listener ...
+
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const visionBtn = document.getElementById('vision-btn');
+
+            let currentImageDataB64 = null; // Variable to store base64 image data
+
+            imageUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        currentImageDataB64 = e.target.result; // Store base64 data
+                        imagePreview.innerHTML = `<img src="${currentImageDataB64}" style="max-width: 100%; max-height: 100%;">`; // Display preview
+                        visionBtn.disabled = false; // Enable Vision button once image is loaded
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreview.innerHTML = ''; // Clear preview if no file selected
+                    visionBtn.disabled = true; // Disable Vision button if no image
+                    currentImageDataB64 = null;
+                }
+            });
+
+            visionBtn.addEventListener('click', async () => {
+                if (!currentImageDataB64) {
+                    alert('Please upload an image first.');
+                    return;
+                }
+
+                // Show loading indicator (you might want a separate one for image processing)
+                loadingDiv.style.display = 'block';
+
+                try {
+                    const response = await fetch(`${apiUrl}/api/vision`, { // Call Flask /api/vision endpoint
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            image: currentImageDataB64, // Send base64 image data
+                            prompt: userInput.value.trim() // Optionally send user prompt as well
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    // Hide loading indicator
+                    loadingDiv.style.display = 'none';
+
+                    if (data.error) {
+                        addMessageToUI('error', data.error);
+                        return;
+                    }
+
+                    // Display vision response - adjust based on Flask response format
+                    addMessageToUI('assistant', data.response); // Assuming Flask returns vision response in 'response' field
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    loadingDiv.style.display = 'none';
+                    addMessageToUI('error', 'Error processing image analysis request.');
+                }
+            });
+            function addMessageToUI(role, content, metadata = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${role}-message`;
+
+                const roleLabel = document.createElement('div');
+                roleLabel.className = 'role-label';
+                roleLabel.textContent = role === 'user' ? 'You' :
+                                       role === 'assistant' ? 'Hextrix AI' : 'Error';
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = content;
+
+                messageDiv.appendChild(roleLabel);
+                messageDiv.appendChild(contentDiv);
+
+                // Add metadata if available - Removed metadata block for now
+                conversationContainer.appendChild(messageDiv);
+
+                // Scroll to the bottom of the conversation
+                conversationContainer.scrollTop = conversationContainer.scrollHeight;
+
+                // Add to local conversation history
+                if (role !== 'error') {
+                    const historyItem = { role, content };
+                    // Only add to local history if not already in the server history
+                    if (!conversationHistory.some(item =>
+                        item.role === historyItem.role && item.content === historyItem.content)) {
+                        conversationHistory.push(historyItem);
+                        localStorage.setItem('hextrix_conversation', JSON.stringify(conversationHistory));
+                    }
+                }
+            }
+
+            function displayConversationHistory() {
+                if (conversationHistory.length > 0) {
+                    conversationHistory.forEach(item => {
+                        addMessageToUI(item.role, item.content);
+                    });
+                }
+            }
+        });
+        // Neuron class
+        class Neuron {
+            constructor(x, y, z, label = "") { // Add 'label' parameter with default empty string
+                this.x = x;
+                this.y = y;
+                this.z = z;
+                this.active = false;
+                this.activeIntensity = 0;
+                this.relatedNeurons = [];
+                this.label = label; // Store the label text
+            }
+
+            activate() {
+                this.active = true;
+                this.activeIntensity = 1;
+            }
+
+
+            update() {
+                if (this.active) {
+                    this.activeIntensity = Math.max(0, this.activeIntensity - 0.02);
+                    if (this.activeIntensity <= 0) {
+                        this.active = false;
+                    }
+                }
+            }
+
+            draw() {
+                // Project 3D coordinates to 2D
+                const scale = 1000 / (1000 + this.z);
+                const x = brainCenter.x + this.x * scale;
+                const y = brainCenter.y + this.y * scale;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 3 * scale, 0, Math.PI * 2);
+
+                if (this.active) {
+                    ctx.fillStyle = `rgba(0, 255, 255, ${this.activeIntensity})`;
+                } else {
+                    ctx.fillStyle = 'rgba(0, 255, 255, 0.3)';
+                }
+
+                ctx.fill();
+                ctx.fill(); // Existing circle fill code
+
+                // Draw text label
+                if (this.label) {
+                    ctx.font = `12px Arial`; // Adjust font size and family as needed
+                    ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'; // Label text color
+                    ctx.textAlign = 'left'; // Align text to the right of the neuron
+                    ctx.textBaseline = 'middle'; // Vertically center text
+                    ctx.fillText(this.label, x + (3 + 5) * scale, y); // Position text to the right of circle
+                }
+            }
+            }
+
+
+        // Connection class
+        class Connection {
+            constructor(fromId, toId, strength) {
+                this.fromId = fromId;
+                this.toId = toId;
+                this.strength = strength;
+                this.active = false;
+                this.activeIntensity = 0;
+            }
+
+            activate() {
+                this.active = true;
+                this.activeIntensity = 1;
+            }
+
+            update() {
+                if (this.active) {
+                    this.activeIntensity = Math.max(0, this.activeIntensity - 0.02);
+                    if (this.activeIntensity <= 0) {
+                        this.active = false;
+                    }
+                }
+            }
+
+            draw() {
+                const from = neurons[this.fromId];
+                const to = neurons[this.toId];
+
+                // Project 3D coordinates to 2D
+                const scale1 = 1000 / (1000 + from.z);
+                const x1 = brainCenter.x + from.x * scale1;
+                const y1 = brainCenter.y + from.y * scale1;
+
+                const scale2 = 1000 / (1000 + to.z);
+                const x2 = brainCenter.x + to.x * scale2;
+                const y2 = brainCenter.y + to.y * scale2;
+
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+
+                if (this.active) {
+                    ctx.strokeStyle = `rgba(0, 255, 255, ${this.activeIntensity * 0.7})`;
+                    ctx.lineWidth = 2;
+                } else {
+                    ctx.strokeStyle = `rgba(0, 255, 255, ${this.strength * 0.3})`;
+                    ctx.lineWidth = 1;
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        // Canvas setup (keep as is)
+        const canvas = document.getElementById('brainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full window size (keep as is)
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Global variables (keep and add new ones)
+        let neurons = [];
+        let connections = [];
+        let memories = [];
+        let currentView = 'full';
+        let rotation = 0;
+        let uiVisible = true;
+        let isFullscreen = false; // Track fullscreen state
+        let searchQuery = ''; // Track memory search query
+
+        // Brain structure parameters (keep as is)
+        const brainCenter = { x: canvas.width / 2, y: canvas.height / 2, z: 0 };
+        const brainSize = { x: canvas.width * 0.25, y: canvas.height * 0.25, z: canvas.width * 0.25 };
+
+        // Brain mesh data (keep as is)
+        const brainMesh = {
+            vertices: [],
+            edges: [],
+            loaded: false
+        };
+
+        // Generate brain mesh
+        function generateBrainMesh() {
+            // Create a more complex brain-like structure
+
+            // Basic brain shape parameters
+            const centerX = 0;
+            const centerY = 0;
+            const centerZ = 0;
+            const brainWidth = brainSize.x * 0.8;
+            const brainHeight = brainSize.y * 0.8;
+            const brainDepth = brainSize.z * 0.8;
+
+            // Generate vertices
+            const vertexCount = 800;
+            brainMesh.vertices = [];
+
+            // First create the core brain shape
+            for (let i = 0; i < vertexCount * 0.7; i++) {
+                // Generate points in brain-like shape
+                // Using a modified ellipsoid with some random variation
+
+                // Start with angles that cover the ellipsoid
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+
+                // Add some variations to make it more brain-like
+                const r1 = 0.7 + Math.random() * 0.3; // Radius variation
+
+                // Cerebral cortex wrinkles and folds
+                const wrinkle = 0.15 * Math.sin(theta * 8) * Math.sin(phi * 6);
+
+                // Basic ellipsoid shape with wrinkles
+                let x = centerX + brainWidth * r1 * Math.sin(phi) * Math.cos(theta) * (1 + wrinkle);
+                let y = centerY + brainHeight * r1 * Math.sin(phi) * Math.sin(theta) * (1 + wrinkle);
+                let z = centerZ + brainDepth * r1 * Math.cos(phi) * (1 + wrinkle);
+
+                // Add some asymmetry for a more realistic brain
+                if (x > 0) {
+                    x *= 1.05;
+                    y *= 0.95;
+                }
+
+                // Add some more detail to the bottom part (cerebellum and brain stem area)
+                if (z < 0 && y > brainHeight * 0.2) {
+                    z *= 1.2;
+                    y *= 0.9;
+                }
+
+                brainMesh.vertices.push({
+                    x, y, z,
+                    size: 1 + Math.random() * 2,
+                    connCount: 0
+                });
+            }
+
+            // Add some additional points in the surrounding network
+            for (let i = 0; i < vertexCount * 0.3; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r = 1.1 + Math.random() * 0.4; // Outside the main brain
+
+                const x = centerX + brainWidth * r * Math.sin(phi) * Math.cos(theta);
+                const y = centerY + brainHeight * r * Math.sin(phi) * Math.sin(theta);
+                const z = centerZ + brainDepth * r * Math.cos(phi);
+
+                brainMesh.vertices.push({
+                    x, y, z,
+                    size: 0.5 + Math.random(),
+                    connCount: 0
+                });
+            }
+
+            // Create connections between vertices
+            brainMesh.edges = [];
+
+            // Connect points based on proximity
+            for (let i = 0; i < brainMesh.vertices.length; i++) {
+                const v1 = brainMesh.vertices[i];
+
+                // Each vertex will connect to several nearby vertices
+                const maxConnections = 3 + Math.floor(Math.random() * 3);
+                let connections = 0;
+
+                for (let j = 0; j < brainMesh.vertices.length && connections < maxConnections; j++) {
+                    if (i === j) continue;
+
+                    const v2 = brainMesh.vertices[j];
+
+                    // Calculate distance between vertices
+                    const dx = v1.x - v2.x;
+                    const dy = v1.y - v2.y;
+                    const dz = v1.z - v2.z;
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                    // Connect if within range and not too many connections
+                    if (distance < brainWidth * 0.2 && v2.connCount < 6) {
+                        brainMesh.edges.push({
+                            from: i,
+                            to: j,
+                            active: false,
+                            activeIntensity: 0
+                        });
+
+                        connections++;
+                        v1.connCount++;
+                        v2.connCount++;
+                    }
+                }
+            }
+
+            brainMesh.loaded = true;
+        }
+
+        // Update brain mesh
+        function updateBrainMesh() {
+            if (!brainMesh.loaded) return;
+
+            // Update edge activations
+            brainMesh.edges.forEach(edge => {
+                if (edge.active) {
+                    edge.activeIntensity = Math.max(0, edge.activeIntensity - 0.02);
+                    if (edge.activeIntensity <= 0) {
+                        edge.active = false;
+                    }
+                }
+            });
+
+            // Randomly activate some edges
+            if (Math.random() < 0.1) {
+                const numToActivate = 1 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < numToActivate; i++) {
+                    const idx = Math.floor(Math.random() * brainMesh.edges.length);
+                    brainMesh.edges[idx].active = true;
+                    brainMesh.edges[idx].activeIntensity = 1;
+                }
+            }
+        }
+
+        // Draw brain mesh
+        function drawBrainMesh() {
+            if (!brainMesh.loaded) return;
+
+            // Rotate brain mesh gradually
+            rotation += 0.002;
+
+            // Apply rotation to vertices for display
+            const rotatedVertices = brainMesh.vertices.map(v => {
+                // Only rotate in full view mode
+                if (currentView !== 'full') {
+                    return {
+                        x: v.x,
+                        y: v.y,
+                        z: v.z,
+                        size: v.size
+                    };
+                }
+
+                // Apply rotation around Y axis
+                const cosR = Math.cos(rotation);
+                const sinR = Math.sin(rotation);
+
+                return {
+                    x: v.x * cosR + v.z * sinR,
+                    y: v.y,
+                    z: v.z * cosR - v.x * sinR,
+                    size: v.size
+                };
+            });
+
+            // Draw edges
+            brainMesh.edges.forEach(edge => {
+                const v1 = rotatedVertices[edge.from];
+                const v2 = rotatedVertices[edge.to];
+
+                // Project 3D coordinates to 2D
+                const scale = 1000 / (1000 + v1.z);
+                const x1 = brainCenter.x + v1.x * scale;
+                const y1 = brainCenter.y + v1.y * scale;
+
+                const scale2 = 1000 / (1000 + v2.z);
+                const x2 = brainCenter.x + v2.x * scale2;
+                const y2 = brainCenter.y + v2.y * scale2;
+
+                // Draw connection
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+
+                if (edge.active) {
+                    ctx.strokeStyle = `rgba(0, 255, 255, ${edge.activeIntensity * 0.5})`;
+                    ctx.lineWidth = 2;
+                } else {
+                    ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+                    ctx.lineWidth = 1;
+                }
+
+                ctx.stroke();
+            });
+
+            // Draw vertices
+            rotatedVertices.forEach(v => {
+                const scale = 1000 / (1000 + v.z);
+                const x = brainCenter.x + v.x * scale;
+                const y = brainCenter.y + v.y * scale;
+
+                ctx.beginPath();
+                ctx.arc(x, y, v.size * scale, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+                ctx.fill();
+                
+            });
+        }
+        function drawNeurons(memoryNodes) {
+            memoryNodes.forEach((nodeData) => {
+                const neuronIndex = nodeData.neuronIndex;
+                if (neuronIndex !== undefined && neurons[neuronIndex]) {
+                    const neuron = neurons[neuronIndex];
+                    neuron.update();
+                    neuron.draw();
+                } else {
+                    console.warn("Warning: Neuron object not found for node:", nodeData);
+                }
+            });
+        }
+                // New function to draw connections based on memoryNetwork.links
+                function drawConnections(memoryLinks) {
+            memoryLinks.forEach(linkData => {
+                const sourceNode = memoryNetwork.nodes.find(node => node.id === linkData.source);
+                const targetNode = memoryNetwork.nodes.find(node => node.id === linkData.target);
+
+                if (sourceNode && targetNode && sourceNode.neuronIndex !== undefined && targetNode.neuronIndex !== undefined) {
+                    const fromNeuron = neurons[sourceNode.neuronIndex];
+                    const toNeuron = neurons[targetNode.neuronIndex];
+
+                    if (fromNeuron && toNeuron) {
+                        // For simplicity, let's just draw a new Connection object each frame for now.
+                        // In a more optimized version, you might want to manage a persistent 'connections' array
+                        const tempConnection = new Connection(sourceNode.neuronIndex, targetNode.neuronIndex, linkData.strength || 0.3); // Default strength if not provided
+                        tempConnection.draw(); // Draw the connection
+                    } else {
+                        console.warn("Warning: Neuron objects not found for link:", linkData);
+                    }
+                } else {
+                    console.warn("Warning: Source or target node/neuron index missing for link:", linkData);
+                }
+            });
+        }
+        // Memory class
+        class Memory {
+            constructor(text) {
+                this.text = text;
+                this.neuronIds = [];
+                this.connectionIds = [];
+                this.lastAccessed = Date.now();
+                this.keywords = [];
+            }
+
+            addNeuron(id) {
+                this.neuronIds.push(id);
+            }
+
+            addConnection(id) {
+                this.connectionIds.push(id);
+            }
+
+            activate() {
+                this.lastAccessed = Date.now();
+
+                // Activate neurons
+                this.neuronIds.forEach(id => {
+                    neurons[id].activate();
+                });
+
+                // Activate connections
+                this.connectionIds.forEach(id => {
+                    connections[id].activate();
+                });
+
+                // Activate brain mesh edges near memory neurons
+                const numEdgesToActivate = 5 + Math.floor(Math.random() * 5);
+                const indices = [];
+
+                // Select random edges to activate
+                for (let i = 0; i < numEdgesToActivate; i++) {
+                    const idx = Math.floor(Math.random() * brainMesh.edges.length);
+                    indices.push(idx);
+                }
+
+                // Activate them with slight delays
+                indices.forEach((idx, i) => {
+                    setTimeout(() => {
+                        brainMesh.edges[idx].active = true;
+                        brainMesh.edges[idx].activeIntensity = 1;
+
+                        setTimeout(() => {
+                            brainMesh.edges[idx].active = false;
+                        }, 800 + Math.random() * 500);
+                    }, i * 50);
+                });
+            }
+        }
+
+        // Initialize brain structure
+        function initBrain() {
+            // Generate brain mesh
+            generateBrainMesh();
+
+            // Create additional neurons for memories
+            for (let i = 0; i < 100; i++) {
+                // Random position within brain
+                let x, y, z;
+                do {
+                    x = (Math.random() * 2 - 1) * brainSize.x;
+                    y = (Math.random() * 2 - 1) * brainSize.y;
+                    z = (Math.random() * 2 - 1) * brainSize.z;
+                } while ((x*x)/(brainSize.x*brainSize.x) +
+                         (y*y)/(brainSize.y*brainSize.y) +
+                         (z*z)/(brainSize.z*brainSize.z) > 0.7);
+
+                neurons.push(new Neuron(x, y, z));
+            }
+
+            // Create initial connections between neurons
+            for (let i = 0; i < neurons.length; i++) {
+                // Connect to nearby neurons
+                for (let j = 0; j < neurons.length; j++) {
+                    if (i !== j) {
+                        const dx = neurons[i].x - neurons[j].x;
+                        const dy = neurons[i].y - neurons[j].y;
+                        const dz = neurons[i].z - neurons[j].z;
+                        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                        if (distance < brainSize.x * 0.3) {
+                            const strength = 0.5 + Math.random() * 0.5;
+                            const connectionId = connections.length;
+                            connections.push(new Connection(i, j, strength));
+                            neurons[i].relatedNeurons.push(j);
+                            neurons[j].relatedNeurons.push(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update memory list in UI
+        function updateMemoryList() {
+            const memoryList = document.getElementById('memories');
+            memoryList.innerHTML = '';
+
+            // Sort memories by most recently accessed
+            const sortedMemories = [...memories].sort((a, b) => b.lastAccessed - a.lastAccessed);
+
+            sortedMemories.forEach(memory => {
+                const memoryDiv = document.createElement('div');
+                memoryDiv.className = 'memory-item';
+                memoryDiv.innerText = memory.text;
+                memoryDiv.addEventListener('click', () => {
+                    memory.activate();
+                });
+                memoryList.appendChild(memoryDiv);
+            });
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Clear canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update brain mesh (keep)
+            updateBrainMesh();
+            drawBrainMesh();
+
+            // Update force layout for neurons and links  <-- ADD THIS LINE
+            updateForceLayout(memoryNetwork.nodes, memoryNetwork.links);
+
+            // Draw neural connections (using memoryNetwork links)
+            drawConnections(memoryNetwork.links);
+
+            // Draw neurons based on memoryNetwork nodes
+            drawNeurons(memoryNetwork.nodes);
+
+            // Call updateVisualization of MemoryNetwork (keep)
+            memoryNetwork.updateVisualization();
+        }
+
+
+        // Toggle UI visibility (Modified to toggle 'hidden' class on UI elements)
+        function toggleUI() {
+            const uiPanel = document.getElementById('uiPanel');
+            uiVisible = !uiVisible;
+
+            if (uiVisible) {
+                uiPanel.classList.remove('hidden');
+                document.querySelector('.controls').classList.remove('hidden');
+                document.querySelector('.memory-list').classList.remove('hidden');
+            } else {
+                uiPanel.classList.add('hidden');
+                document.querySelector('.controls').classList.add('hidden');
+                document.querySelector('.memory-list').classList.add('hidden');
+            }
+        }
+
+        // Toggle Fullscreen
+        function toggleFullscreen() {
+            if (!isFullscreen) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+                    document.documentElement.msRequestFullscreen();
+                }
+                isFullscreen = true;
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { /* Firefox */
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE/Edge */
+                    document.msExitFullscreen();
+                }
+                isFullscreen = false;
+            }
+        }
+
+            // Simulate random thoughts - activate random neurons and connections
+            if (Math.random() < 0.02) {
+                // Activate a random neuron
+                if (neurons.length > 0) {
+                    const neuronIndex = Math.floor(Math.random() * neurons.length);
+                    neurons[neuronIndex].activate();
+                }
+            }
+            if (Math.random() < 0.01 && connections.length > 0) {
+                const connectionIndex = Math.floor(Math.random() * connections.length);
+                connections[connectionIndex].activate();
+            }
+
+
+            // Clear canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw brain mesh
+            updateBrainMesh();
+            drawBrainMesh();
+
+            // Update and draw neural connections
+            connections.forEach(conn => {
+                conn.update();
+                conn.draw();
+            });
+
+            // Update and draw neurons
+            neurons.forEach(neuron => {
+                neuron.update();
+                neuron.draw();
+            });
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Simulate random thoughts - activate random neurons and connections
+            if (Math.random() < 0.02) {
+                // Activate a random neuron
+                if (neurons.length > 0) {
+                    const neuronIndex = Math.floor(Math.random() * neurons.length);
+                    neurons[neuronIndex].activate();
+                }
+            }
+            if (Math.random() < 0.01 && connections.length > 0) {
+                const connectionIndex = Math.floor(Math.random() * connections.length);
+                connections[connectionIndex].activate();
+            }
+
+            // Clear canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update and draw brain mesh
+            updateBrainMesh();
+            drawBrainMesh();
+
+            // Update and draw neural connections
+            connections.forEach(conn => {
+                conn.update();
+                conn.draw();
+            });
+
+            // Update and draw neurons
+            neurons.forEach(neuron => {
+                neuron.update();
+                neuron.draw();
+            });
+        }
+            // HUD Toggle
+            let hudInitialized = false;
+            document.getElementById('hudToggle').addEventListener('click', () => {
+                const hudPanel = document.getElementById('hudPanel');
+                const uiPanel = document.getElementById('uiPanel');
+                hudPanel.classList.toggle('active');
+                const isActive = hudPanel.classList.contains('active');
+                window.toggleHUD(isActive);
+
+                if (isActive) {
+                    uiPanel.classList.add('hidden');
+                    if (!hudInitialized) {
+                        // Additional initialization if needed
+                        hudInitialized = true;
+                    }
+                } else {
+                    uiPanel.classList.remove('hidden');
+                }
+            });
+
+        // Handle window resize (keep as is)
+        window.addEventListener('resize', () => { /* ... */ });
+
+        // Create a new memory (keep as is)
+        function createMemory(text) { /* ... */ }
+
+        // Process conversation to extract keywords (keep as is)
+        function processConversation(text) { /* ... */ }
+
+
+        // Save state to localStorage (keep as is)
+        function saveState() { /* ... */ }
+
+        // Load state from localStorage (keep as is)
+        function loadState() { /* ... */ }
+
+        // Export memories to JSON file (keep as is)
+        function exportMemories() { /* ... */ }
+
+        // Import memories from JSON file (keep as is)
+        function importMemories() { /* ... */ }
+
+        // Clear search function (keep as is)
+        function clearSearch() { /* ... */ }
+
+        // Clear all memories function (keep as is)
+        function clearAllMemories() { /* ... */ }
+
+
+        // Keyboard shortcuts (keep and add search focus)
+        document.addEventListener('keydown', function(event) { /* ... */ });
+
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize brain
+            initBrain();
+            // Instantiate MemoryNetwork
+            const memoryNetwork = new MemoryNetwork(); // Instantiate here
+
+            loadState(); // Load saved state on startup
+            updateMemoryList(); // Initial memory list update
+
+            // Save state every minute
+            setInterval(saveState, 60000);
+
+
+            // Add event listeners for buttons
+            document.getElementById('uiToggle').addEventListener('click', toggleUI);
+            document.getElementById('fullscreenToggle').addEventListener('click', toggleFullscreen);
+            document.getElementById('addMemory').addEventListener('click', () => {
+                const input = document.getElementById('memoryInput');
+                if (input.value.trim()) {
+                    createMemory(input.value.trim());
+                    input.value = '';
+                }
+            });
+
+            document.getElementById('memoryInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                    createMemory(e.target.value.trim());
+                    e.target.value = '';
+                }
+            });
+
+            document.getElementById('processConversation').addEventListener('click', () => {
+                const input = document.getElementById('conversationInput');
+                const text = input.value.trim();
+                if (text) {
+                    processConversation(text);
+                    input.value = '';
+                }
+            });
+
+            document.getElementById('viewFull').addEventListener('click', () => { currentView = 'full'; animate(); });
+            document.getElementById('viewSide').addEventListener('click', () => { currentView = 'side'; animate(); });
+            document.getElementById('viewTop').addEventListener('click', () => { currentView = 'top'; animate(); });
+            document.getElementById('memorySearch').addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                updateMemoryList();
+            });
+            document.getElementById('clearSearch').addEventListener('click', clearSearch);
+            document.getElementById('clearMemories').addEventListener('click', clearAllMemories);
+            document.getElementById('exportMemories').addEventListener('click', exportMemories);
+            document.getElementById('importMemories').addEventListener('click', importMemories);
+
+
+            // Start animation loop
+            animate();
+        });
+        
+    </script>
+</body>
+</html> 
