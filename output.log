@@ -1,0 +1,38 @@
+Setting up GObject introspection paths...
+Starting Hextrix AI OS directly...
+VTE terminal not available: Requiring namespace 'Gtk' version '3.0', but '4.0' is already loaded
+Terminal functionality will be limited.
+Failed to import Qt modules: No module named 'PyQt5.QtWebKitWidgets'
+QtWebKit is not available. Using fallback visualization.
+Qt-based neural visualization is not available, will use fallback
+Error refreshing MCP capabilities: HTTPConnectionPool(host='localhost', port=3000): Max retries exceeded with url: /.well-known/mcp-configuration (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7700bf870b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+MCP Integration initialized successfully
+Initializing custom commands
+Traceback (most recent call last):
+  File "/home/jared/hextrix-ai-os-env/hud/main.py", line 42, in <module>
+    win = HextrixHUD()
+          ^^^^^^^^^^^^
+  File "/home/jared/hextrix-ai-os-env/hud/hextrix_hud.py", line 147, in __init__
+    self.file_panel_content = FilePanel(self)
+                              ^^^^^^^^^^^^^^^
+  File "/home/jared/hextrix-ai-os-env/hud/file_panel.py", line 86, in __init__
+    self.load_directory()
+  File "/home/jared/hextrix-ai-os-env/hud/file_panel.py", line 255, in load_directory
+    self.store.append(item)
+  File "/usr/lib/python3/dist-packages/gi/overrides/Gtk.py", line 1005, in append
+    return self._do_insert(-1, row)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/gi/overrides/Gtk.py", line 996, in _do_insert
+    row, columns = self._convert_row(row)
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/gi/overrides/Gtk.py", line 896, in _convert_row
+    result.append(self._convert_value(cur_col, value))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/gi/overrides/Gtk.py", line 910, in _convert_value
+    return GObject.Value(self.get_column_type(column), value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/gi/overrides/GObject.py", line 208, in __init__
+    self.set_value(py_value)
+  File "/usr/lib/python3/dist-packages/gi/overrides/GObject.py", line 257, in set_value
+    _gi._gvalue_set(self, py_value)
+TypeError: Expected GObject

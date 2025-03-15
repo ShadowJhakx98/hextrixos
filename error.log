@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/jared/hextrix-ai-os-env/hud/main.py", line 42, in <module>
+    win = HextrixHUD()
+          ^^^^^^^^^^^^
+  File "/home/jared/hextrix-ai-os-env/hud/hextrix_hud.py", line 145, in __init__
+    self.chat_panel = ChatPanel(self)
+                      ^^^^^^^^^^^^^^^
+  File "/home/jared/hextrix-ai-os-env/hud/chat_panel.py", line 48, in __init__
+    self.create_header()
+  File "/home/jared/hextrix-ai-os-env/hud/chat_panel.py", line 291, in create_header
+    self.header.pack_start(title, True, True, 0)
+    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Box' object has no attribute 'pack_start'

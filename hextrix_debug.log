@@ -1,0 +1,22 @@
+
+
+----- STDOUT -----
+VTE terminal not available: Requiring namespace 'Gtk' version '3.0', but '4.0' is already loaded
+Terminal functionality will be limited.
+Failed to import Qt modules: No module named 'PyQt5.QtWebKitWidgets'
+QtWebKit is not available. Using fallback visualization.
+Qt-based neural visualization is not available, will use fallback
+
+
+----- STDERR -----
+Traceback (most recent call last):
+  File "/home/jared/hextrix-ai-os-env/hud/main.py", line 42, in <module>
+    win = HextrixHUD()
+          ^^^^^^^^^^^^
+  File "/home/jared/hextrix-ai-os-env/hud/hextrix_hud.py", line 139, in __init__
+    self.overlay.add(self.visualization)
+    ^^^^^^^^^^^^^^^^
+AttributeError: 'Overlay' object has no attribute 'add'
+
+
+Exit code: 1
