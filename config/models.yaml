@@ -1,0 +1,15 @@
+models:
+  medical:
+    cancer_detection: "meta-llama/Llama-3.1-8B-Instruct"
+    treatment_ai: "google/datagemma-rig-27b-it"
+    
+  nsfw:
+    primary: "UnfilteredAI/NSFW-gen-v2"
+    secondary: "aifeifei798/DPO_Pairs-Roleplay-NSFW"
+    
+  style_transfer:
+    base_model: "nvidia/Mistral-NeMo-Minitron-8B-Base"
+    glaze: "deepseek-ai/DeepSeek-R1"
+    
+  code:
+    python: "Agnuxo/Tinytron-1B-TinyLlama-Instruct_CODE_Python"

@@ -1,0 +1,37 @@
+[
+  {
+    "name": "File Manager",
+    "icon_path": "system-file-manager",
+    "command": "thunar",
+    "desktop_id": "thunar.desktop",
+    "category": "System"
+  },
+  {
+    "name": "Web Browser",
+    "icon_path": "web-browser",
+    "command": "firefox",
+    "desktop_id": "firefox.desktop",
+    "category": "Internet"
+  },
+  {
+    "name": "Text Editor",
+    "icon_path": "accessories-text-editor",
+    "command": "gedit",
+    "desktop_id": "gedit.desktop",
+    "category": "Development"
+  },
+  {
+    "name": "Terminal",
+    "icon_path": "utilities-terminal",
+    "command": "xterm",
+    "desktop_id": "xterm.desktop",
+    "category": "Utilities"
+  },
+  {
+    "name": "Cyberpunk Explorer",
+    "icon_path": "folder-cyan",
+    "command": "python cyberpunk_explorer.py",
+    "desktop_id": "cyberpunk-explorer.desktop",
+    "category": "Utilities"
+  }
+]
